@@ -1,0 +1,20 @@
+{
+  "name": "issue-tracker",
+  "version": "1.0.0",
+  "description": "Full-stack issue tracker built for learning",
+  "homepage": "https://github.com/S0urceDA/issue-tracker#readme",
+  "bugs": {
+    "url": "https://github.com/S0urceDA/issue-tracker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S0urceDA/issue-tracker.git"
+  },
+  "license": "ISC",
+  "author": "S0urceDA",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
