@@ -1,13 +1,25 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 app.get("/issues", (req, res) => {
-  res.status(200).send("list issues\n");
+  res.status(200).json([
+    {
+      id: 1,
+      title: "Fix login bug",
+      status: "open"
+    }
+  ]);
 });
 
 app.post("/issues", (req, res) => {
-  res.status(201).send("create issue\n");
+  console.log(req.body);
+
+  res.status(201).json({
+    message: "issue created",
+    issue: req.body
+  });
 });
 
 app.use((req, res) => {
