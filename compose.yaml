@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: issue_tracker
       POSTGRES_USER: issue_app
-      POSTGRES_PASSWORD: devpassword
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
