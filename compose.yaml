@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: issue_tracker
+      POSTGRES_USER: issue_app
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  postgres_data:
