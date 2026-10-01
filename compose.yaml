@@ -5,11 +5,18 @@ services:
       POSTGRES_DB: issue_tracker
       POSTGRES_USER: issue_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  backend:
+    build: .
+    environment:
+      DATABASE_URL: "postgresql://issue_app:${POSTGRES_PASSWORD}@db:5432/issue_tracker"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
 
 volumes:
   postgres_data:
