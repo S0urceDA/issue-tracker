@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [issues, setIssues] = useState([]);
@@ -13,6 +14,10 @@ function App() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    if (!title.trim()) {
+      return;
+    }
+
     const response = await fetch("/issues", {
       method: "POST",
       headers: {
@@ -20,6 +25,11 @@ function App() {
       },
       body: JSON.stringify({ title }),
     });
+
+    if (!response.ok) {
+      console.error("Failed to create issue");
+      return;
+    }
 
     const newIssue = await response.json();
 
@@ -62,39 +72,82 @@ function App() {
       return;
     }
 
-    setIssues(
-      issues.filter((issue) => issue.id !== id)
-    );
+    setIssues(issues.filter((issue) => issue.id !== id));
   }
 
   return (
-    <main>
-      <h1>Issue Tracker</h1>
+    <main className="app">
+      <div className="app-shell">
+        <header className="app-header">
+          <p className="eyebrow">Full-Stack Project</p>
+          <h1>Issue Tracker</h1>
+          <p className="subtitle">
+            Track, update, and manage issues with React, Express, and PostgreSQL.
+          </p>
+        </header>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Issue title"
-        />
+        <form className="issue-form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Enter a new issue title..."
+          />
+          <button type="submit">Create Issue</button>
+        </form>
 
-        <button type="submit">Create issue</button>
-      </form>
+        <section className="issues-section">
+          <div className="section-header">
+            <h2>All Issues</h2>
+            <span className="issue-count">
+              {issues.length} {issues.length === 1 ? "issue" : "issues"}
+            </span>
+          </div>
 
-      {issues.map((issue) => (
-        <div key={issue.id}>
-          <h2>{issue.title}</h2>
-          <p>{issue.status}</p>
+          {issues.length === 0 ? (
+            <div className="empty-state">
+              <p>No issues yet.</p>
+              <span>Create your first one above.</span>
+            </div>
+          ) : (
+            <div className="issues-grid">
+              {issues.map((issue) => (
+                <article
+                  key={issue.id}
+                  className={`issue-card ${issue.status}`}
+                >
+                  <div className="issue-card-top">
+                    <div>
+                      <p className="issue-id">Issue #{issue.id}</p>
+                      <h3>{issue.title}</h3>
+                    </div>
 
-          <button onClick={() => toggleStatus(issue)}>
-            {issue.status === "open" ? "Close issue" : "Reopen issue"}
-          </button>
+                    <span className={`status-badge ${issue.status}`}>
+                      {issue.status}
+                    </span>
+                  </div>
 
-          <button onClick={() => deleteIssue(issue.id)}>
-            Delete issue
-          </button>
-        </div>
-      ))}
+                  <div className="issue-actions">
+                    <button
+                      className="secondary-btn"
+                      onClick={() => toggleStatus(issue)}
+                    >
+                      {issue.status === "open" ? "Close" : "Reopen"}
+                    </button>
+
+                    <button
+                      className="danger-btn"
+                      onClick={() => deleteIssue(issue.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </main>
   );
 }
