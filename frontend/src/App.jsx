@@ -27,6 +27,31 @@ function App() {
     setTitle("");
   }
 
+  async function toggleStatus(issue) {
+    const newStatus = issue.status === "open" ? "closed" : "open";
+
+    const response = await fetch(`/issues/${issue.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to update issue");
+      return;
+    }
+
+    const updatedIssue = await response.json();
+
+    setIssues(
+      issues.map((currentIssue) =>
+        currentIssue.id === updatedIssue.id ? updatedIssue : currentIssue
+      )
+    );
+  }
+
   return (
     <main>
       <h1>Issue Tracker</h1>
@@ -45,6 +70,10 @@ function App() {
         <div key={issue.id}>
           <h2>{issue.title}</h2>
           <p>{issue.status}</p>
+
+          <button onClick={() => toggleStatus(issue)}>
+            {issue.status === "open" ? "Close issue" : "Reopen issue"}
+          </button>
         </div>
       ))}
     </main>
