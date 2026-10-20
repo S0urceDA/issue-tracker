@@ -52,6 +52,21 @@ function App() {
     );
   }
 
+  async function deleteIssue(id) {
+    const response = await fetch(`/issues/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      console.error("Failed to delete issue");
+      return;
+    }
+
+    setIssues(
+      issues.filter((issue) => issue.id !== id)
+    );
+  }
+
   return (
     <main>
       <h1>Issue Tracker</h1>
@@ -73,6 +88,10 @@ function App() {
 
           <button onClick={() => toggleStatus(issue)}>
             {issue.status === "open" ? "Close issue" : "Reopen issue"}
+          </button>
+
+          <button onClick={() => deleteIssue(issue.id)}>
+            Delete issue
           </button>
         </div>
       ))}
